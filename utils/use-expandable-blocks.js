@@ -777,13 +777,24 @@ function getDynamicArgs(args) {
   //   .filter((key) => key.startsWith('DYNAMIC_ARGS'))
   //   .map((key) => args[key]);
 
-  // 尝试通过按序号顺序读取
+  /**
+   * 依赖 undefined 确定参数是否存在 的办法有bug：
+   * 如果输入的参数值是undefined，则不会继续读取下一个参数。
+   */
+  // // 尝试通过按序号顺序读取
+  // const res = [];
+  // for (let i = 1; ; i++) {
+  //   const v = args[`DYNAMIC_ARGS${i}`];
+  //   if (v === undefined) return res;
+  //   res.push(v);
+  // }
+
+  // 使用 hasOwnProperty 判断参数是否存在
   const res = [];
-  for (let i = 1; ; i++) {
-    const v = args[`DYNAMIC_ARGS${i}`];
-    if (v === undefined) return res;
-    res.push(v);
+  for (let i = 1, k; Object.prototype.hasOwnProperty.call(args, k = `DYNAMIC_ARGS${i}`); i++) {
+    res.push(args[k]);
   }
+  return res;
 }
 
 export { getDynamicArgs, initExpandableBlocks };
