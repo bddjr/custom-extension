@@ -790,11 +790,11 @@ function getDynamicArgs(args) {
   // }
 
   // 使用 hasOwnProperty 判断参数是否存在
-  const res = [];
-  for (let i = 1, k; Object.prototype.hasOwnProperty.call(args, k = `DYNAMIC_ARGS${i}`); i++) {
+  for (const res = []; ; ) {
+    const k = `DYNAMIC_ARGS${res.length + 1}`;
+    if (!args.hasOwnProperty(k)) return res;
     res.push(args[k]);
   }
-  return res;
 }
 
 export { getDynamicArgs, initExpandableBlocks };
